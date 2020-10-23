@@ -1,0 +1,250 @@
+#!markdown
+
+# Learn F# in x minutes
+
+#!markdown
+
+## Primitive types
+
+#!fsharp
+
+let aBool = true
+
+let anInteger = 3
+let anotherInteger = 1_000_000_000
+
+let aFloat = 3.142
+let anotherFloat = 5.
+
+let aChar = 'a'
+let anotherChar = '\u0061'
+
+let aString = "Mary had a little lamb."
+
+#!markdown
+
+## Functions
+
+#!fsharp
+
+let double x = x * 2
+let square x = x * x
+
+let isEven x = x % 2 = 0
+
+let add x y = x + y
+let add2 = add 2
+
+add2 3
+
+let sayHello x = sprintf "Hello, %s!" x
+
+let sayHelloPointFreeStyle = sprintf "Hello, %s!"
+
+#!markdown
+
+## Tuples
+
+#!fsharp
+
+let aTuple = 2, 3
+let anotherTuple = 4.5, true, "Oh hai!"
+
+let add (x, y) = x + y
+add aTuple
+
+#!markdown
+
+## Infix notation
+
+#!fsharp
+
+let add x y = x + y
+
+(add 2 3) = (2 + 3)
+
+// let (+) x y = x + y
+
+let (^) s1 s2 = sprintf "%s%s" s1 s2
+
+"Hello, " ^ "World!" = "Hello, World!"
+
+#!markdown
+
+## Pipelines
+
+#!fsharp
+
+let double x = x * 2
+let square x = x * x
+let add x y = x + y
+
+(add 10 (square (double 2))) = (double 2 |> square |> add 10)
+
+// let (|>) x fn = fn x
+
+#!markdown
+
+## Composition
+
+#!fsharp
+
+let double x = x * 2
+let square x = x * x
+let add x y = x + y
+
+let doubleAndSquare x = double x |> square
+
+let doubleAndSquareComposed = double >> square
+
+// let (>>) fn1 fn2 x = fn2 (fn1 x)
+
+#!markdown
+
+## Modules
+
+#!fsharp
+
+module Say =
+    let hello x = sprintf "Hello, %s" x
+
+Say.hello "World!"
+
+module Maths =
+    let square x = x * x
+
+Maths.square 6
+
+#!markdown
+
+## F# collection types
+
+#!fsharp
+
+let anArray = [|1; 2; 3; 4|]
+
+let aList = [1; 2; 3; 4]
+let anotherList = 0 :: aList
+
+let aSeq = Seq.ofList [1; 2; 3; 4]
+
+let aSet = Set.ofList [1; 2; 3; 4]
+
+let aMap = Map.ofList [ "A", 50; "B", 30; "C", 20; "D", 10 ]
+
+[1; 2; 3; 4; 5; 6; 7; 8; 9]
+|> List.filter (fun x -> x % 2 = 0)
+
+#!markdown
+
+## Record types
+
+#!fsharp
+
+type Name = {
+    firstName: string
+    lastName: string
+}
+
+type Address = {
+    addressLine1: string
+    postcode: string
+}
+
+type Customer = {
+    name: Name
+    address: Address
+}
+
+let name = { firstName = "John"; lastName = "Doe" }
+
+let address = { addressLine1 = "24, Nowhere Street"; postcode = "A1 2BC" }
+
+let customer = { name = name; address = address }
+
+#!markdown
+
+## Discriminated unions (AKA tagged unions)
+
+#!fsharp
+
+type ContactDetail =
+| Email of string
+| Mobile of string
+| Phone of string
+
+type Temperature =
+| Centrigrade of int
+| Fahrenheit of float
+
+let myTemp = Centrigrade 35
+
+#!markdown
+
+## Pattern matching
+
+#!fsharp
+
+type Element =
+| Paragraph of string
+| Heading1 of string
+
+let render e =
+    match e with
+    | Paragraph p -> sprintf "<p>%s</p>\n" p
+    | Heading1 h -> sprintf "<h1>%s</h1>\n" h
+
+let doc = [
+    Heading1 "An example of discriminated unions"
+    Paragraph "Discriminated unions are very useful."
+]
+
+List.map render doc
+|> List.reduce (fun x y -> (x ^ y))
+
+#!markdown
+
+## Recursive functions
+
+#!fsharp
+
+let rec fibonacci x =
+    match x with
+    | 0 -> 0
+    | 1 -> 1
+    | x -> fibonacci (x-1) + fibonacci (x-2)
+
+[0..5]
+|> List.map fibonacci
+
+#!markdown
+
+## The Option and Result discriminated unions
+
+#!fsharp
+
+(*
+type Option<'T> =
+| Some of 'T
+| None
+*)
+
+let safeDivide x y =
+    match y with
+    | 0 -> None
+    | _ -> Some (x/y)
+
+safeDivide 10 0
+
+(*
+type Result<'T,'TError> = 
+| Ok of 'T 
+| Error of 'TError
+*)
+
+let safeDivide2 x y =
+    match y with
+    | 0 -> Error "Cannot divide by zero"
+    | _ -> Ok (x/y)
+
+safeDivide2 10 0

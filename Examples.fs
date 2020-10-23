@@ -5,6 +5,7 @@
 // [ ] Tuples
 // [ ] Pipelines
 // [ ] Composition
+// [ ] Modules
 // [ ] F# Collection types
 // [ ] Record types
 // [ ] Discriminated Union types
